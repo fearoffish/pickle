@@ -31,7 +31,11 @@ module Pickle
       end
 
       def model_classes
-        @@model_classes ||= ::ActiveRecord::Base.send(:subclasses).select {|klass| suitable_for_pickle?(klass)}
+        @@model_classes ||= if defined?(::ActiveRecord)
+          ::ActiveRecord::Base.send(:subclasses).select {|klass| suitable_for_pickle?(klass)}
+        else
+          []
+        end
       end
       
       # return true if a klass should be used by pickle
